@@ -29,8 +29,8 @@ export class TodoistService {
     return this.todoist.addTask(task);
   }
 
-  async getTasks(whatevs) {
-    return this.todoist.getTasks(whatevs);
+  async getTasks(args) {
+    return this.todoist.getTasks(args);
   }
 
   async deleteProject(project) {
@@ -47,4 +47,4 @@ export class TodoistService {
     await Promise.all(projects.map((project) => this.deleteProject(project)));
   }
 }
-// SG_TODO clean up service & add logging
+// SG_TODO add logging
