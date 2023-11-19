@@ -1,10 +1,9 @@
 import { expect } from "chai";
 import { describe, it, beforeEach, afterEach } from "mocha";
 import { duplicateProject } from "../../functions/src/controllers/todoistController.js";
-import { TODOIST_TEST_PREFIX } from "../constants.js";
-import { TodoistTestService } from "../serviceWrappers/TodoistTestService.js";
+import { TodoistService } from "../../functions/src/services/TodoistService.js";
 
-const todoist = new TodoistTestService({
+const todoist = new TodoistService({
   todoistApiKey: process.env.TODOIST_API_KEY,
   logger: console,
 });
@@ -12,7 +11,7 @@ const todoist = new TodoistTestService({
 describe("duplicateProject", () => {
   const sourceProject = {
     color: "charcoal",
-    name: `${TODOIST_TEST_PREFIX} Template`,
+    name: "Template",
     viewStyle: "list",
   };
   let sourceProjectId;
@@ -42,10 +41,10 @@ describe("duplicateProject", () => {
     });
   });
   afterEach(async () => {
-    await todoist.deleteAllIntegrationTestProjects();
+    await todoist.deleteAllProjects();
   });
-  it.only("should copy the project and assign a new name", async () => {
-    const targetProjectName = `${TODOIST_TEST_PREFIX} Template Copy`;
+  it("should copy the project and assign a new name", async () => {
+    const targetProjectName = "Template";
     const targetProject = await duplicateProject({
       todoist,
       sourceProjectId,
@@ -59,7 +58,7 @@ describe("duplicateProject", () => {
     const targetProject = await duplicateProject({
       todoist,
       sourceProjectId,
-      targetProjectName: `${TODOIST_TEST_PREFIX} Template Copy`,
+      targetProjectName: "Template Copy",
     });
     const sourceSections = await todoist.getSections(sourceProjectId);
     const targetSections = await todoist.getSections(targetProject.id);
@@ -73,7 +72,7 @@ describe("duplicateProject", () => {
     const targetProject = await duplicateProject({
       todoist,
       sourceProjectId,
-      targetProjectName: `${TODOIST_TEST_PREFIX} Template Copy`,
+      targetProjectName: "Template Copy",
     });
     const sourceTasks = await todoist.getTasks({ projectId: sourceProjectId });
     const targetTasks = await todoist.getTasks({ projectId: targetProject.id });
@@ -88,7 +87,7 @@ describe("duplicateProject", () => {
     const targetProject = await duplicateProject({
       todoist,
       sourceProjectId,
-      targetProjectName: `${TODOIST_TEST_PREFIX} Template Copy`,
+      targetProjectName: "Template Copy",
     });
     const sourceTasks = await todoist.getTasks({ projectId: sourceProjectId });
     const targetTasks = await todoist.getTasks({ projectId: targetProject.id });

@@ -36,4 +36,14 @@ export class TodoistService {
   async deleteProject(project) {
     return this.todoist.deleteProject(project.id);
   }
+
+  async deleteAllProjects() {
+    if (process.env.NODE_ENV !== "test") {
+      throw new Error(
+        "You're trying to delete all projects outside of test... you probably didn't mean to do that. You're welcome."
+      );
+    }
+    const projects = await this.getProjects();
+    await Promise.all(projects.map((project) => this.deleteProject(project)));
+  }
 }
