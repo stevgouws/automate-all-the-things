@@ -10,6 +10,7 @@
     "pretest": "npm run set-env-test",
     "posttest": "npm run set-env-prod",
     "test": "mocha --r dotenv/config",
+    "deploy": "firebase deploy --only functions",
     "create-mobility-routine": "node -r dotenv/config ./functions/src/scripts/createMobilityRoutine/run.js"
   },
   "repository": {
