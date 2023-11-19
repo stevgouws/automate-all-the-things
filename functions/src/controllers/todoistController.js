@@ -1,7 +1,8 @@
-import { todoist } from "../services/todoistService.js";
-import { TODOIST_TEST_PREFIX } from "../../test/constants.js";
-
-export async function duplicateProject({ sourceProjectId, targetProjectName }) {
+export async function duplicateProject({
+  sourceProjectId,
+  targetProjectName,
+  todoist,
+}) {
   const project = await todoist.getProject(sourceProjectId);
   const targetProject = await todoist.addProject({
     ...project,
@@ -21,6 +22,7 @@ export async function duplicateProject({ sourceProjectId, targetProjectName }) {
     targetProject,
     sourceSections,
     targetSections,
+    todoist,
   });
   return targetProject;
 }
@@ -30,18 +32,19 @@ async function duplicateTasks({
   sourceSections,
   targetSections,
   targetProject,
+  todoist,
 }) {
-  const sourceSectionsIdToNameMap = sourceSections.reduce((acc, section) => {
-    acc[section.id] = section.name;
-    return acc;
-  }, {});
+  const sourceSectionsIdToNameMap = new Map(
+    sourceSections.map(({ id, name }) => [id, name])
+  );
   const sourceTasks = await todoist.getTasks({ projectId: sourceProjectId });
   // Let's do this synchronously so we ensure task order. Otherwise Todoist overrides the order
   // based on what order the requests are received in, regardless of the order argument
   for (const sourceTask of sourceTasks) {
     const { id: targetSectionId } = targetSections.find(
       (targetSection) =>
-        targetSection.name === sourceSectionsIdToNameMap[sourceTask.sectionId]
+        targetSection.name ===
+        sourceSectionsIdToNameMap.get(sourceTask.sectionId)
     );
     await todoist.addTask({
       ...sourceTask,
@@ -49,14 +52,4 @@ async function duplicateTasks({
       sectionId: targetSectionId,
     });
   }
-}
-
-export async function deleteAllIntegrationTestProjects() {
-  const projects = await todoist.getProjects();
-  const integrationTestProjects = projects.filter((project) =>
-    project.name.includes(TODOIST_TEST_PREFIX)
-  );
-  await Promise.all(
-    integrationTestProjects.map((project) => todoist.deleteProject(project))
-  );
 }

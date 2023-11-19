@@ -5,8 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "set-env-test": "ln -sf env/.env.test .env && echo 'TEST ENV ACTIVE'",
+    "set-env-prod": "ln -sf env/.env.prod .env && echo 'PROD ENV ACTIVE'",
+    "pretest": "npm run set-env-test",
+    "posttest": "npm run set-env-prod",
     "test": "mocha --r dotenv/config",
-    "create-mobility-routine": "node -r dotenv/config ./src/scripts/createMobilityRoutine.js"
+    "create-mobility-routine": "node -r dotenv/config ./functions/src/scripts/createMobilityRoutine/run.js"
   },
   "repository": {
     "type": "git",
@@ -18,10 +22,13 @@
     "url": "https://github.com/stevgouws/automate-all-the-things/issues"
   },
   "homepage": "https://github.com/stevgouws/automate-all-the-things#readme",
+  "engines": {
+    "node": "18"
+  },
   "dependencies": {
     "@doist/todoist-api-typescript": "^3.0.0",
-    "install": "^0.13.0",
-    "npm": "^10.2.3"
+    "firebase-admin": "^11.11.0",
+    "firebase-functions": "^4.5.0"
   },
   "devDependencies": {
     "chai": "^4.3.10",
@@ -34,6 +41,7 @@
     "eslint-plugin-prettier": "^5.0.1",
     "mocha": "^10.2.0",
     "prettier": "^3.0.3",
+    "firebase-functions-test": "^3.1.0",
     "sinon": "^17.0.1"
   }
 }

@@ -1,11 +1,13 @@
 import { expect } from "chai";
 import { describe, it, beforeEach, afterEach } from "mocha";
-import { todoist } from "../../src/services/todoistService.js";
-import {
-  duplicateProject,
-  deleteAllIntegrationTestProjects,
-} from "../../src/controllers/todoistController.js";
+import { duplicateProject } from "../../functions/src/controllers/todoistController.js";
 import { TODOIST_TEST_PREFIX } from "../constants.js";
+import { TodoistTestService } from "../serviceWrappers/TodoistTestService.js";
+
+const todoist = new TodoistTestService({
+  todoistApiKey: process.env.TODOIST_API_KEY,
+  logger: console,
+});
 
 describe("duplicateProject", () => {
   const sourceProject = {
@@ -40,11 +42,12 @@ describe("duplicateProject", () => {
     });
   });
   afterEach(async () => {
-    await deleteAllIntegrationTestProjects();
+    await todoist.deleteAllIntegrationTestProjects();
   });
-  it("should copy the project and assign a new name", async () => {
+  it.only("should copy the project and assign a new name", async () => {
     const targetProjectName = `${TODOIST_TEST_PREFIX} Template Copy`;
     const targetProject = await duplicateProject({
+      todoist,
       sourceProjectId,
       targetProjectName,
     });
@@ -54,6 +57,7 @@ describe("duplicateProject", () => {
   });
   it("should copy the project sections", async () => {
     const targetProject = await duplicateProject({
+      todoist,
       sourceProjectId,
       targetProjectName: `${TODOIST_TEST_PREFIX} Template Copy`,
     });
@@ -67,6 +71,7 @@ describe("duplicateProject", () => {
   });
   it("should copy the project tasks", async () => {
     const targetProject = await duplicateProject({
+      todoist,
       sourceProjectId,
       targetProjectName: `${TODOIST_TEST_PREFIX} Template Copy`,
     });
@@ -81,6 +86,7 @@ describe("duplicateProject", () => {
   });
   it("should assign the copied tasks to the corresponding section", async () => {
     const targetProject = await duplicateProject({
+      todoist,
       sourceProjectId,
       targetProjectName: `${TODOIST_TEST_PREFIX} Template Copy`,
     });
