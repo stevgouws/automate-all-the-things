@@ -47,3 +47,4 @@ export class TodoistService {
     await Promise.all(projects.map((project) => this.deleteProject(project)));
   }
 }
+// SG_TODO clean up service & add logging
