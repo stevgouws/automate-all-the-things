@@ -1,7 +1,10 @@
 import { duplicateProject } from "../../controllers/todoistController.js";
 import { TodoistService } from "../../services/TodoistService.js";
 
-export const createMobilityRoutine = async ({ todoistApiKey, logger }) => {
+export const createMobilityRoutine = async ({
+  todoistApiKey = process.env.TODOIST_API_KEY,
+  logger = console,
+} = {}) => {
   const todoist = new TodoistService({ todoistApiKey });
   const projects = await todoist.getProjects();
   const mobilityProject = projects.find(({ name }) => name === "Mobility");

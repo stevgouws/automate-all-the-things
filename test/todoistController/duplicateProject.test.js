@@ -5,7 +5,6 @@ import { TodoistService } from "../../functions/src/services/TodoistService.js";
 
 const todoist = new TodoistService({
   todoistApiKey: process.env.TODOIST_API_KEY,
-  logger: console,
 });
 
 describe("duplicateProject", () => {
