@@ -62,7 +62,11 @@ export async function scheduleTaskByTag({ todoist, task }) {
   if (!task.labels.includes("Daily") && !task.labels.includes(todayName)) {
     return task;
   }
+  return scheduleTaskForToday({ todoist, task });
+}
+
+export async function scheduleTaskForToday({ todoist, task }) {
   return todoist.updateTask(task.id, {
-    dueDate: format(today, "yyyy-MM-dd"),
+    dueDate: format(startOfToday(), "yyyy-MM-dd"),
   });
 }

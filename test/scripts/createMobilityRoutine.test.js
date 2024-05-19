@@ -1,6 +1,7 @@
 /* eslint-disable import/no-relative-packages */
 import { expect } from "chai";
 import { describe, it, beforeEach, afterEach } from "mocha";
+import { isToday } from "date-fns";
 import { createMobilityRoutine } from "../../functions/src/scripts/createMobilityRoutine/index.js";
 import { TodoistService } from "../../functions/src/services/TodoistService.js";
 
@@ -47,6 +48,53 @@ describe("createMobilityRoutine", () => {
         );
         expect(targetProjects).to.have.lengthOf(1);
       }
+    });
+  });
+  describe("given that there is a 'Mobility' project with a 'Move' section", () => {
+    beforeEach(async () => {
+      const project = await todoist.addProject({
+        name: "Mobility",
+      });
+      const moveSection = await todoist.addSection({
+        name: "Move",
+        projectId: project.id,
+      });
+      await todoist.addTask({
+        content: "Task 1",
+        description: "Task 1 description",
+        projectId: project.id,
+        sectionId: moveSection.id,
+      });
+      await todoist.addTask({
+        content: "Task 2",
+        description: "Task 2 description",
+        projectId: project.id,
+        sectionId: moveSection.id,
+      });
+      await todoist.addTask({
+        content: "Task 3",
+        description: "Task 3 description",
+        projectId: project.id,
+        sectionId: moveSection.id,
+      });
+      await todoist.addTask({
+        content: "Task 4",
+        description: "Task 4 description",
+        projectId: project.id,
+        sectionId: moveSection.id,
+      });
+    });
+    afterEach(async () => {
+      await todoist.deleteAllProjects();
+    });
+    it("should schedule 3 random tasks for today", async () => {
+      await createMobilityRoutine();
+      const tasks = await todoist.getTasks({ filter: "#Mobility & /Move" });
+      const todayTasks = tasks.filter(({ due }) => {
+        if (!due) return false;
+        return isToday(new Date(due.date));
+      });
+      expect(todayTasks).to.have.lengthOf(3);
     });
   });
 });
