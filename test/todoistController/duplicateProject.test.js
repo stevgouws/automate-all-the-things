@@ -1,3 +1,4 @@
+/* eslint-disable import/no-relative-packages */
 import { expect } from "chai";
 import { describe, it, beforeEach, afterEach } from "mocha";
 import { duplicateProject } from "../../functions/src/controllers/todoistController.js";
@@ -105,6 +106,46 @@ describe("duplicateProject", () => {
       expect(targetSectionsIdToNameMap[targetTask.sectionId]).to.equal(
         sourceSectionIdToNameMap[sourceProjectTask.sectionId]
       );
+    });
+  });
+  describe("given that a project has no sections", () => {
+    const sourceProject = {
+      color: "charcoal",
+      name: "No Sections Template",
+      viewStyle: "list",
+    };
+    let sourceProjectId;
+    beforeEach(async () => {
+      ({ id: sourceProjectId } = await todoist.addProject({
+        name: sourceProject.name,
+      }));
+      await todoist.addTask({
+        content: "Task 1",
+        description: "Task 1 description",
+        projectId: sourceProjectId,
+      });
+      await todoist.addTask({
+        content: "Task 2",
+        description: "Task 2 description",
+        projectId: sourceProjectId,
+      });
+    });
+    afterEach(async () => {
+      await todoist.deleteAllProjects();
+    });
+    it("should still copy all tasks", async () => {
+      const targetProject = await duplicateProject({
+        todoist,
+        sourceProjectId,
+        targetProjectName: "No Sections Template Copy",
+      });
+      const sourceTasks = await todoist.getTasks({
+        projectId: sourceProjectId,
+      });
+      const targetTasks = await todoist.getTasks({
+        projectId: targetProject.id,
+      });
+      expect(targetTasks).to.have.length(sourceTasks.length);
     });
   });
 });

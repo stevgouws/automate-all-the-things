@@ -29,6 +29,10 @@ export class TodoistService {
     return this.todoist.addTask(task);
   }
 
+  async updateTask(taskId, updates) {
+    return this.todoist.updateTask(taskId, updates);
+  }
+
   async getTasks(args) {
     return this.todoist.getTasks(args);
   }

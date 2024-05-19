@@ -17,6 +17,7 @@ export const scheduleCreateMobilityRoutine = onSchedule(
     await createMobilityRoutine({
       todoistApiKey: todoistApiKey.value(),
       logger,
+      templateNames: ["Mobility Template", "Exercise Template"],
     }).catch((error) => {
       logger.error(error);
       throw error;

@@ -1,3 +1,5 @@
+import { startOfToday, format } from "date-fns";
+
 export async function duplicateProject({
   sourceProjectId,
   targetProjectName,
@@ -41,7 +43,7 @@ async function duplicateTasks({
   // Let's do this synchronously so we ensure task order. Otherwise Todoist overrides the order
   // based on what order the requests are received in, regardless of the order argument
   for (const sourceTask of sourceTasks) {
-    const { id: targetSectionId } = targetSections.find(
+    const targetSection = targetSections.find(
       (targetSection) =>
         targetSection.name ===
         sourceSectionsIdToNameMap.get(sourceTask.sectionId)
@@ -49,7 +51,18 @@ async function duplicateTasks({
     await todoist.addTask({
       ...sourceTask,
       projectId: targetProject.id,
-      sectionId: targetSectionId,
+      ...(targetSection && { sectionId: targetSection.id }),
     });
   }
+}
+
+export async function scheduleTaskByTag({ todoist, task }) {
+  const today = startOfToday();
+  const todayName = format(today, "E");
+  if (!task.labels.includes("Daily") && !task.labels.includes(todayName)) {
+    return task;
+  }
+  return todoist.updateTask(task.id, {
+    dueDate: format(today, "yyyy-MM-dd"),
+  });
 }
