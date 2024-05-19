@@ -8,13 +8,13 @@ const todoist = new TodoistService({
   todoistApiKey: process.env.TODOIST_API_KEY,
 });
 
-const templateNames = ["Mobility Template", "Exercise Template"];
+const templateNames = ["⚙️ Mobility", "⚙️ Exercise"];
 
 describe("createMobilityRoutine", () => {
-  describe("for each template", () => {
+  describe("for each project that starts with the gear emoji", () => {
     beforeEach(async () => {
       for (const templateName of templateNames) {
-        const targetProjectName = templateName.replace(" Template", "");
+        const targetProjectName = templateName.replace("⚙️", "").trim();
         await todoist.addProject({
           name: templateName,
         });
@@ -30,7 +30,7 @@ describe("createMobilityRoutine", () => {
       await createMobilityRoutine({ templateNames });
       const projects = await todoist.getProjects();
       for (const templateName of templateNames) {
-        const targetProjectName = templateName.replace(" Template", "");
+        const targetProjectName = templateName.replace("⚙️", "").trim();
         const targetProject = projects.find(
           ({ name }) => name === targetProjectName
         );

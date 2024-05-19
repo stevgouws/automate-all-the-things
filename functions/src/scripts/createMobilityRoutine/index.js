@@ -7,16 +7,16 @@ import { TodoistService } from "../../services/TodoistService.js";
 export const createMobilityRoutine = async ({
   todoistApiKey = process.env.TODOIST_API_KEY,
   logger = console,
-  templateNames = [],
 } = {}) => {
   const todoist = new TodoistService({ todoistApiKey });
   const projects = await todoist.getProjects();
-  for (const templateName of templateNames) {
-    logger.log(`Processing ${templateName}...`);
-    const targetProjectName = templateName.replace(" Template", "");
+  const templates = projects.filter((project) => project.name.startsWith("⚙️"));
+  for (const template of templates) {
+    logger.log(`Processing ${template.name}...`);
+    const targetProjectName = template.name.replace("⚙️", "").trim();
     const oldProject = projects.find(({ name }) => name === targetProjectName);
     if (oldProject) await todoist.deleteProject(oldProject);
-    const templateProject = projects.find(({ name }) => name === templateName);
+    const templateProject = projects.find(({ name }) => name === template.name);
     const newProject = await duplicateProject({
       sourceProjectId: templateProject.id,
       targetProjectName,
@@ -26,6 +26,7 @@ export const createMobilityRoutine = async ({
     await Promise.all(
       tasks.map((task) => scheduleTaskByTag({ todoist, task }))
     );
-    logger.log("Created mobility routine ✅");
+    logger.log(`Created new ${targetProjectName} project`);
   }
+  logger.log("Created mobility routine ✅");
 };
