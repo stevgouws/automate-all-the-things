@@ -97,4 +97,39 @@ describe("createMobilityRoutine", () => {
       expect(todayTasks).to.have.lengthOf(3);
     });
   });
+  describe("given that there is a 'Exercise' project with a 'Mobilise' section", () => {
+    beforeEach(async () => {
+      const project = await todoist.addProject({
+        name: "Exercise",
+      });
+      const mobiliseSection = await todoist.addSection({
+        name: "Mobilise",
+        projectId: project.id,
+      });
+      await todoist.addTask({
+        content: "Task 1",
+        description: "Task 1 description",
+        projectId: project.id,
+        sectionId: mobiliseSection.id,
+      });
+      await todoist.addTask({
+        content: "Task 2",
+        description: "Task 2 description",
+        projectId: project.id,
+        sectionId: mobiliseSection.id,
+      });
+    });
+    afterEach(async () => {
+      await todoist.deleteAllProjects();
+    });
+    it("should schedule 1 random task for today", async () => {
+      await createMobilityRoutine();
+      const tasks = await todoist.getTasks({ filter: "#Exercise & /Mobilise" });
+      const todayTasks = tasks.filter(({ due }) => {
+        if (!due) return false;
+        return isToday(new Date(due.date));
+      });
+      expect(todayTasks).to.have.lengthOf(1);
+    });
+  });
 });

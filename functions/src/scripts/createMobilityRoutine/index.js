@@ -11,7 +11,18 @@ export const createMobilityRoutine = async ({
 } = {}) => {
   const todoist = new TodoistService({ todoistApiKey });
   await createBaseMobilityRoutine({ todoist, logger });
-  await scheduleThreeRandomMoveTasks({ todoist, logger });
+  await scheduleRandomTasks({
+    todoist,
+    logger,
+    filter: "#Mobility & /Move",
+    numberOfTasks: 3,
+  });
+  await scheduleRandomTasks({
+    todoist,
+    logger,
+    filter: "#Exercise & /Mobilise",
+    numberOfTasks: 1,
+  });
   logger.log("Created mobility routine ✅");
 };
 
@@ -37,12 +48,12 @@ async function createBaseMobilityRoutine({ todoist, logger }) {
   }
 }
 
-async function scheduleThreeRandomMoveTasks({ todoist, logger }) {
-  const movementTasks = await todoist.getTasks({ filter: "#Mobility & /Move" });
-  const randomMovementTasksSelection = movementTasks
+async function scheduleRandomTasks({ todoist, logger, filter, numberOfTasks }) {
+  const movementTasks = await todoist.getTasks({ filter });
+  const randomTasksSelection = movementTasks
     .sort(() => Math.random() - 0.5)
-    .slice(0, 3);
-  for (const task of randomMovementTasksSelection) {
+    .slice(0, numberOfTasks);
+  for (const task of randomTasksSelection) {
     await scheduleTaskForToday({ todoist, task });
     logger.log(`Scheduled ${task.content} for today`);
   }
