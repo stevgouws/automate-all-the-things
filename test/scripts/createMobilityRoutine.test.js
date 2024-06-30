@@ -94,7 +94,7 @@ describe("createMobilityRoutine", () => {
         if (!due) return false;
         return isToday(new Date(due.date));
       });
-      expect(todayTasks).to.have.lengthOf(3);
+      expect(todayTasks).to.have.lengthOf(2);
     });
   });
   describe("given that there is a 'Exercise' project with a 'Mobilise' section", () => {

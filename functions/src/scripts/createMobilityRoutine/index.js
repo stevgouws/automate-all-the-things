@@ -15,7 +15,7 @@ export const createMobilityRoutine = async ({
     todoist,
     logger,
     filter: "#Mobility & /Move",
-    numberOfTasks: 3,
+    numberOfTasks: 2,
   });
   await scheduleRandomTasks({
     todoist,
