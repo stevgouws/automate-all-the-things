@@ -6,20 +6,18 @@ import { YnabService } from "../../services/YnabService.js";
 import * as ynab from "ynab";
 import { isWeekend } from "date-fns";
 // import { processTransport } from "./processors/index.js";
+import { logger } from "../../services/LoggerService";
 
 export async function processYnabTransactions({
   apiKey = process.env.YNAB_API_KEY,
-  logger = console,
 }: {
   apiKey?: string | undefined;
-  logger?: {
-    log: (...data: any[]) => void;
-  };
 } = {}) {
   if (!apiKey) throw new Error("No API key provided");
   const ynabService = new YnabService(new ynab.API(apiKey), "GBP", logger);
   ynabService.isDryRun = false;
-  logger.log(`Processing YNAB transactions: isDryRun:${ynabService.isDryRun}`);
+
+  logger.info(`Processing YNAB transactions: isDryRun:${ynabService.isDryRun}`);
   // const unapprovedTransactions = await ynabService.getUnapprovedTransactions();
   // const categoryGroups = await ynabService.getCategoryGroups();
   // const flattened = categoryGroups.flatMap((group) => group.categories);
@@ -51,6 +49,7 @@ export async function processYnabTransactions({
   );
   const processedTflTransactions = processTransport(tflTransactions);
   await ynabService.updateTransactions(processedTflTransactions);
+  logger.info(`✅ Done processing YNAB transactions`);
 }
 
 // SG_TODO Write tests

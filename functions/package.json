@@ -20,6 +20,8 @@
     "firebase-admin": "^11.11.1",
     "firebase-functions": "^4.9.0",
     "lodash": "^4.17.21",
+    "pino": "^9.3.2",
+    "pino-pretty": "^11.2.2",
     "ynab": "^2.4.0"
   },
   "private": true,

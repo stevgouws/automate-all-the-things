@@ -1,5 +1,6 @@
 import * as ynab from "ynab";
 import { BUDGET_IDS } from "../constants";
+import { Logger } from "pino";
 
 type Status = "Updated" | "Reconciled";
 
@@ -7,17 +8,9 @@ export class YnabService {
   ynabAPI: ynab.api;
   budgetId: BudgetId;
   isDryRun: boolean;
-  logger: {
-    log: (...data: any[]) => void;
-  };
+  logger: Logger;
 
-  constructor(
-    ynabAPI: ynab.api,
-    budgetName: BudgetName,
-    logger: {
-      log: (...data: any[]) => void;
-    }
-  ) {
+  constructor(ynabAPI: ynab.api, budgetName: BudgetName, logger: Logger) {
     this.ynabAPI = ynabAPI;
     this.budgetId = BUDGET_IDS[budgetName];
     this.isDryRun = false;
@@ -91,7 +84,7 @@ export class YnabService {
         { category }
       );
     }
-    this.logger.log(
+    this.logger.info(
       `✅ Updated ${category.name} to ${pounds(category.budgeted)}`
     );
   }
@@ -145,7 +138,7 @@ export class YnabService {
         { transactions }
       );
       if (!result.data.transactions) {
-        this.logger.log("No result");
+        this.logger.info("No result");
         return;
       }
       result.data.transactions.forEach((transaction) =>
@@ -172,7 +165,7 @@ export class YnabService {
       ({ id, account_name, amount, category_name, date, memo, payee_name }) => {
         // SG_TODO subtransactions?
         // SG_TODO flag all processed transactions?
-        this.logger.log(
+        this.logger.info(
           `${this.isDryRun ? "Dry-run: " : ""}Approved: ${date} ${pounds(
             amount
           )}, ${account_name}, ${category_name}, ${payee_name}, ${memo}, ${id}`
@@ -211,7 +204,7 @@ export class YnabService {
       ({ account_name, amount, category_name, date, memo, payee_name }) => {
         // SG_TODO subtransactions?
         // SG_TODO flag all processed transactions?
-        this.logger.log(
+        this.logger.info(
           `Deleted: ${date} £${ynab.utils.convertMilliUnitsToCurrencyAmount(
             amount
           )}, ${account_name}, ${category_name}, ${payee_name}, ${memo}`
@@ -232,7 +225,7 @@ export class YnabService {
       id,
     }: ynab.TransactionDetail
   ) {
-    this.logger.log(
+    this.logger.info(
       `${this.isDryRun ? "Dry-run: " : ""}${status}: ${date} ${pounds(
         amount
       )}, ${account_name}, ${category_name}, ${payee_name}, ${memo}, ${id}`

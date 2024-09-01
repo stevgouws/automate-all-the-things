@@ -1,7 +1,7 @@
-import logger from "firebase-functions/logger";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { defineSecret } from "firebase-functions/params";
 import { createMobilityRoutine } from "../scripts/createMobilityRoutine/index.js";
+import { logger } from "../services/LoggerService.js";
 
 const todoistApiKey = defineSecret("TODOIST_API_KEY");
 
@@ -13,7 +13,7 @@ export const scheduleCreateMobilityRoutine = onSchedule(
     secrets: [todoistApiKey],
   },
   async () => {
-    logger.log("Starting create mobility routine");
+    logger.info("Starting create mobility routine");
     await createMobilityRoutine({
       todoistApiKey: todoistApiKey.value(),
       logger,
@@ -21,6 +21,6 @@ export const scheduleCreateMobilityRoutine = onSchedule(
       logger.error(error);
       throw error;
     });
-    logger.log("✅ Successfully created mobility routine");
+    logger.info("✅ Successfully created mobility routine");
   }
 );

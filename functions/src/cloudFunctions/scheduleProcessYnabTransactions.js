@@ -2,25 +2,25 @@
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { defineSecret } from "firebase-functions/params";
 import { processYnabTransactions } from "../scripts/processYnabTransactions";
+import { logger } from "../services/LoggerService";
 
 const ynabApiKey = defineSecret("YNAB_API_KEY");
-const logger = console;
 export const scheduleProcessYnabTransactions = onSchedule(
   {
     region: "europe-west2",
     timeZone: "Europe/London",
-    schedule: "every day 05:00",
+    schedule: "every 60 mins from 06:00 to 22:00",
+    timeoutSeconds: 60 * 5,
     secrets: [ynabApiKey],
   },
   async () => {
-    logger.log("Starting: processYnabTransactions");
+    logger.info("Starting: processYnabTransactions");
     await processYnabTransactions({
       apiKey: ynabApiKey.value(),
-      logger,
     }).catch((error) => {
       logger.error(error);
       throw error;
     });
-    logger.log("˚✅ Successfully processed Ynab transactions");
+    logger.info("˚✅ Successfully processed Ynab transactions");
   }
 );

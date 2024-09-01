@@ -4,10 +4,10 @@ import {
   scheduleTaskForToday,
 } from "../../controllers/todoistController.js";
 import { TodoistService } from "../../services/TodoistService.js";
+import { logger } from "../../services/LoggerService";
 
 export const createMobilityRoutine = async ({
   todoistApiKey = process.env.TODOIST_API_KEY,
-  logger = console,
 } = {}) => {
   const todoist = new TodoistService({ todoistApiKey });
   await createBaseMobilityRoutine({ todoist, logger });
@@ -23,14 +23,14 @@ export const createMobilityRoutine = async ({
     filter: "#Exercise & /Mobilise",
     numberOfTasks: 1,
   });
-  logger.log("Created mobility routine ✅");
+  logger.info("Created mobility routine ✅");
 };
 
 async function createBaseMobilityRoutine({ todoist, logger }) {
   const projects = await todoist.getProjects();
   const templates = projects.filter((project) => project.name.startsWith("⚙️"));
   for (const template of templates) {
-    logger.log(`Processing ${template.name}...`);
+    logger.info(`Processing ${template.name}...`);
     const targetProjectName = template.name.replace("⚙️", "").trim();
     const oldProject = projects.find(({ name }) => name === targetProjectName);
     if (oldProject) await todoist.deleteProject(oldProject);
@@ -44,7 +44,7 @@ async function createBaseMobilityRoutine({ todoist, logger }) {
     await Promise.all(
       tasks.map((task) => scheduleTaskByTag({ todoist, task }))
     );
-    logger.log(`Created new ${targetProjectName} project`);
+    logger.info(`Created new ${targetProjectName} project`);
   }
 }
 
@@ -55,6 +55,6 @@ async function scheduleRandomTasks({ todoist, logger, filter, numberOfTasks }) {
     .slice(0, numberOfTasks);
   for (const task of randomTasksSelection) {
     await scheduleTaskForToday({ todoist, task });
-    logger.log(`Scheduled ${task.content} for today`);
+    logger.info(`Scheduled ${task.content} for today`);
   }
 }
