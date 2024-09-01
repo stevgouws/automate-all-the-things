@@ -1,0 +1,3 @@
+import { processYnabTransactions } from ".";
+
+processYnabTransactions();
