@@ -77,7 +77,7 @@ export function processTransport(
 
   function getCategory(accountId: string, amount: number, date: string) {
     if (accountId === ACCOUNT_IDS.AMEX) return CATEGORY_IDS.TRANSPORT_LUCIA;
-    if (accountId === ACCOUNT_IDS.CURRENT || accountId === ACCOUNT_IDS.CHASE) {
+    if (accountId !== ACCOUNT_IDS.CURRENT && accountId !== ACCOUNT_IDS.CHASE) {
       throw new Error("Unexpected account for TFL");
     }
     if (isWeekend(new Date(date))) return CATEGORY_IDS.TRANSPORT_STEVEN;
