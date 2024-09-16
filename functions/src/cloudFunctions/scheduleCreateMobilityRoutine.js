@@ -10,6 +10,7 @@ export const scheduleCreateMobilityRoutine = onSchedule(
     region: "europe-west2",
     timeZone: "Europe/London",
     schedule: "every day 05:00",
+    timeoutSeconds: 60 * 5,
     secrets: [todoistApiKey],
   },
   async () => {
