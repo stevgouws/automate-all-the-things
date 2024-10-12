@@ -5,15 +5,19 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "build": "tsc",
     "set-env-test": "ln -sf env/.env.test .env && echo 'TEST ENV ACTIVE'",
     "set-env-prod": "ln -sf env/.env.prod .env && echo 'PROD ENV ACTIVE'",
     "pretest": "npm run set-env-test",
     "posttest": "npm run set-env-prod",
     "test": "mocha --r dotenv/config",
-    "deploy": "firebase deploy --only functions",
-    "create-mobility-routine": "npm run build && node -r dotenv/config ./functions/dist/src/scripts/createMobilityRoutine/run.js | npx pino-pretty",
-    "build": "cd functions && npm run build",
-    "process-ynab-transactions": "npm run build && node -r dotenv/config ./functions/dist/src/scripts/processYnabTransactions/run.js | npx pino-pretty"
+    "create-mobility-routine": "npm run build && node -r dotenv/config ./dist/src/scripts/createMobilityRoutine/run.js | npx pino-pretty",
+    "process-ynab-transactions": "npm run build && node -r dotenv/config ./dist/src/scripts/processYnabTransactions/run.js | npx pino-pretty"
   },
   "repository": {
     "type": "git",
@@ -35,8 +39,11 @@
     "firebase-admin": "^11.11.1",
     "firebase-functions": "^4.9.0",
     "lodash": "^4.17.21",
+    "pino": "^9.3.2",
+    "pino-pretty": "^11.2.2",
     "ynab": "^2.4.0"
   },
+  "private": true,
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.2.0",
     "@typescript-eslint/parser": "^8.2.0",
@@ -52,6 +59,7 @@
     "mocha": "^10.2.0",
     "prettier": "^3.0.3",
     "sinon": "^17.0.1",
+    "type-fest": "^4.26.1",
     "typescript": "^5.5.4"
   }
 }

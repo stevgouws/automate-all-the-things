@@ -2,6 +2,7 @@ module.exports = {
   root: true,
   parserOptions: {
     ecmaVersion: 2022,
+    project: ["tsconfig.json", "tsconfig.dev.json"],
     sourceType: "module",
   },
   env: {
@@ -10,8 +11,17 @@ module.exports = {
     //
   },
   // prettier should be last so that it overrides all other configs, basically saying, don't error on whatever you've got configured for prettier
-  extends: ["airbnb-base", "prettier"],
-  plugins: ["prettier", "chai-friendly"],
+  extends: [
+    "airbnb-base",
+    "prettier",
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "google",
+    "plugin:@typescript-eslint/recommended",
+  ],
+  plugins: ["prettier", "chai-friendly", "@typescript-eslint", "import"],
   rules: {
     "prettier/prettier": "warn", // in combination with plugins: ['prettier'] will show prettier conflicts (you might have to reload the window after you've made changes to .prettierrc)
     "no-shadow": "off",
@@ -39,6 +49,9 @@ module.exports = {
     "no-await-in-loop": "off",
     "no-console": "off",
     "import/extensions": "off",
+    quotes: ["error", "double"],
+    "import/no-unresolved": 0,
+    indent: ["error", 2],
   },
   ignorePatterns: ["dist"],
   // chai specific config so that no-unused-expressions rule still applies in test files but not to
