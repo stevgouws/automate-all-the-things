@@ -13,9 +13,9 @@
     "build": "tsc",
     "set-env-test": "ln -sf env/.env.test .env && echo 'TEST ENV ACTIVE'",
     "set-env-prod": "ln -sf env/.env.prod .env && echo 'PROD ENV ACTIVE'",
-    "pretest": "npm run set-env-test",
+    "pretest": "npm run set-env-test && npm run build",
     "posttest": "npm run set-env-prod",
-    "test": "mocha --r dotenv/config",
+    "test": "mocha ./dist/test --r dotenv/config",
     "create-mobility-routine": "npm run build && node -r dotenv/config ./dist/src/scripts/createMobilityRoutine/run.js | npx pino-pretty",
     "process-ynab-transactions": "npm run build && node -r dotenv/config ./dist/src/scripts/processYnabTransactions/run.js | npx pino-pretty"
   },
@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "@doist/todoist-api-typescript": "^3.0.3",
-    "@types/node": "^22.5.0",
     "date-fns": "^3.6.0",
     "firebase-admin": "^11.11.1",
     "firebase-functions": "^4.9.0",
@@ -45,6 +44,7 @@
   },
   "private": true,
   "devDependencies": {
+    "@types/node": "^22.5.0",
     "@typescript-eslint/eslint-plugin": "^8.2.0",
     "@typescript-eslint/parser": "^8.2.0",
     "chai": "^4.3.10",

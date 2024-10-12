@@ -2,8 +2,8 @@
 import { expect } from "chai";
 import { describe, it, beforeEach, afterEach } from "mocha";
 import { isToday } from "date-fns";
-import { createMobilityRoutine } from "../../functions/src/scripts/createMobilityRoutine/index.js";
-import { TodoistService } from "../../functions/src/services/TodoistService.js";
+import { createMobilityRoutine } from "../../src/scripts/createMobilityRoutine/index.js";
+import { TodoistService } from "../../src/services/TodoistService.js";
 
 const todoist = new TodoistService({
   todoistApiKey: process.env.TODOIST_API_KEY,

@@ -3,8 +3,8 @@ import { expect } from "chai";
 import { describe, it, beforeEach, afterEach, before, after } from "mocha";
 import sinon from "sinon";
 // import * as dateFns from "date-fns";
-import { scheduleTaskByTag } from "../../functions/src/controllers/todoistController.js";
-import { TodoistService } from "../../functions/src/services/TodoistService.js";
+import { scheduleTaskByTag } from "../../src/controllers/todoistController.js";
+import { TodoistService } from "../../src/services/TodoistService.js";
 
 const todoist = new TodoistService({
   todoistApiKey: process.env.TODOIST_API_KEY,

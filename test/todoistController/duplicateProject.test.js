@@ -1,8 +1,8 @@
 /* eslint-disable import/no-relative-packages */
 import { expect } from "chai";
 import { describe, it, beforeEach, afterEach } from "mocha";
-import { duplicateProject } from "../../functions/src/controllers/todoistController.js";
-import { TodoistService } from "../../functions/src/services/TodoistService.js";
+import { duplicateProject } from "../../src/controllers/todoistController.js";
+import { TodoistService } from "../../src/services/TodoistService.js";
 
 const todoist = new TodoistService({
   todoistApiKey: process.env.TODOIST_API_KEY,

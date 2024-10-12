@@ -11,5 +11,5 @@
     "esModuleInterop": true
   },
   "compileOnSave": true,
-  "include": ["src", "index.js"]
+  "include": ["src", "index.js", "test"]
 }
