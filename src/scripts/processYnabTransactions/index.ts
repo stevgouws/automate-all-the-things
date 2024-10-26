@@ -81,7 +81,7 @@ export function processTransport(
       throw new Error("Unexpected account for TFL");
     }
     if (isWeekend(new Date(date))) return CATEGORY_IDS.TRANSPORT_STEVEN;
-    if (Math.abs(amount) > 5_000) return CATEGORY_IDS.MOBILITY_STEVEN;
+    if (Math.abs(amount) > 2_500) return CATEGORY_IDS.MOBILITY_STEVEN;
     return CATEGORY_IDS.TRANSPORT_ZOE;
   }
 }
