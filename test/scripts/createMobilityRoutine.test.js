@@ -50,7 +50,7 @@ describe("createMobilityRoutine", () => {
       }
     });
   });
-  describe("given that there is a 'Mobility' project with a 'Move' section", () => {
+  describe.skip("given that there is a 'Mobility' project with a 'Move' section", () => {
     beforeEach(async () => {
       const project = await todoist.addProject({
         name: "Mobility",
@@ -87,7 +87,7 @@ describe("createMobilityRoutine", () => {
     afterEach(async () => {
       await todoist.deleteAllProjects();
     });
-    it("should schedule 3 random tasks for today", async () => {
+    it("should schedule 2 random tasks for today", async () => {
       await createMobilityRoutine();
       const tasks = await todoist.getTasks({ filter: "#Mobility & /Move" });
       const todayTasks = tasks.filter(({ due }) => {
@@ -97,7 +97,7 @@ describe("createMobilityRoutine", () => {
       expect(todayTasks).to.have.lengthOf(2);
     });
   });
-  describe("given that there is a 'Exercise' project with a 'Mobilise' section", () => {
+  describe.skip("given that there is a 'Exercise' project with a 'Mobilise' section", () => {
     beforeEach(async () => {
       const project = await todoist.addProject({
         name: "Exercise",

@@ -11,18 +11,18 @@ export const createMobilityRoutine = async ({
 } = {}) => {
   const todoist = new TodoistService({ todoistApiKey });
   await createBaseMobilityRoutine({ todoist, logger });
-  await scheduleRandomTasks({
-    todoist,
-    logger,
-    filter: "#Mobility & /Move",
-    numberOfTasks: 2,
-  });
-  await scheduleRandomTasks({
-    todoist,
-    logger,
-    filter: "#Exercise & /Mobilise",
-    numberOfTasks: 1,
-  });
+  // await scheduleRandomTasks({
+  //   todoist,
+  //   logger,
+  //   filter: "#Mobility & /Move",
+  //   numberOfTasks: 2,
+  // });
+  // await scheduleRandomTasks({
+  //   todoist,
+  //   logger,
+  //   filter: "#Exercise & /Mobilise",
+  //   numberOfTasks: 1,
+  // });
   logger.info("Created mobility routine ✅");
 };
 
