@@ -15,7 +15,7 @@
     "set-env-prod": "ln -sf env/.env.prod .env && echo 'PROD ENV ACTIVE'",
     "pretest": "pnpm run set-env-test && pnpm run build",
     "posttest": "pnpm run set-env-prod",
-    "test": "mocha ./dist/test --r dotenv/config | npx pino-pretty",
+    "test": "mocha ./dist/test --r dotenv/config",
     "create-mobility-routine": "pnpm run build && node -r dotenv/config ./dist/src/scripts/createMobilityRoutine/run.js | npx pino-pretty",
     "process-ynab-transactions": "pnpm run build && node -r dotenv/config ./dist/src/scripts/processYnabTransactions/run.js | npx pino-pretty"
   },
